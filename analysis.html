@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOWTRACE | System Analysis</title>
+    <style>
+        :root {
+            --primary-green: #22c55e;
+            --bg-black: #0a0a0a;
+            --card-bg: #111111;
+            --text-gray: #a1a1aa;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding-top: 100px; /* Adjusted for larger header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* --- Header Section with Increased Sizes --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90px; /* Increased height */
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 2px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2rem; /* Increased logo size */
+            font-weight: bold;
+            color: var(--primary-green);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px; /* Increased gap between links */
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white; /* Changed to white for better visibility */
+            text-decoration: none;
+            font-size: 1.2rem; /* Increased font size */
+            font-weight: bold;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-green);
+        }
+        /* ------------------------- */
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #222;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-green);
+        }
+
+        .terminal-window {
+            background: #000;
+            border: 1px solid #444;
+            padding: 15px;
+            height: 250px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            color: var(--primary-green);
+        }
+
+        .log-entry { margin-bottom: 5px; }
+        .log-time { color: #666; margin-right: 10px; }
+        .log-success { color: #fff; }
+
+        .action-btn {
+            display: none;
+            margin-top: 20px;
+            background: var(--primary-green);
+            color: black;
+            border: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .terminal-window::-webkit-scrollbar { width: 5px; }
+        .terminal-window::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">SHADOWTRACE</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#">About</a>
+            <a href="https://github.com" target="_blank">GitHub</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="header-content">
+            <div class="status-badge" id="status-text">Analysis in Progress...</div>
+            <h1 style="letter-spacing: 4px; color: var(--primary-green); margin-top: 10px;">SYSTEM SCAN</h1>
+            <p style="color: var(--text-gray);">Scanning for malicious network hooks & IP callbacks</p>
+        </div>
+
+        <div class="progress-container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem;">
+                <span>System Integrity Scan</span>
+                <span id="percent-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="main-progress"></div>
+            </div>
+        </div>
+
+        <div class="terminal-window" id="terminal"></div>
+
+        <button class="action-btn" id="report-btn">VIEW FULL INTELLIGENCE REPORT</button>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const progressBar = document.getElementById('main-progress');
+        const percentText = document.getElementById('percent-text');
+        const statusText = document.getElementById('status-text');
+        const reportBtn = document.getElementById('report-btn');
+
+        const logs = [
+            "Initializing ShadowTrace Sandbox...",
+            "Loading virus signatures...",
+            "Decrypting file structure...",
+            "Scanning for background network calls...",
+            "Tracing remote IP connections...",
+            "Analyzing PE headers...",
+            "Checking for obfuscated scripts...",
+            "Cross-referencing with Threat Intel Database...",
+            "Identifying potential C2 nodes...",
+            "Compiling final risk assessment..."
+        ];
+
+        let currentStep = 0;
+
+        function addLog(message) {
+            const now = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">[${now}]</span> <span class="log-success">> ${message}</span>`;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function runAnalysis() {
+            if (currentStep < logs.length) {
+                addLog(logs[currentStep]);
+                let progress = ((currentStep + 1) / logs.length) * 100;
+                progressBar.style.width = progress + "%";
+                percentText.innerText = Math.round(progress) + "%";
+                currentStep++;
+                setTimeout(runAnalysis, Math.random() * 1000 + 500);
+            } else {
+                statusText.innerText = "Analysis Complete";
+                statusText.style.borderColor = "#fff";
+                statusText.style.color = "#fff";
+                addLog("CRITICAL: Analysis finished. No immediate threats found.");
+                reportBtn.style.display = "block";
+            }
+        }
+
+        window.onload = () => {
+            setTimeout(runAnalysis, 1000);
+        };
+    </script>
+</body>
+</html>
