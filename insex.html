@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowTrace | Intelligence Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Background Change: Adding a subtle animated grid for depth */
+        body { 
+            background-color: #050505; 
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #00ff41; 
+            font-family: 'Courier New', Courier, monospace; 
+            overflow-x: hidden;
+        }
+
+        .glass { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(0, 255, 65, 0.2); }
+        .glow:hover { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
+
+        /* Unique Upload Area Animation */
+        @keyframes pulse-border {
+            0% { border-color: rgba(0, 255, 65, 0.2); transform: scale(1); }
+            50% { border-color: rgba(0, 255, 65, 0.8); transform: scale(1.01); }
+            100% { border-color: rgba(0, 255, 65, 0.2); transform: scale(1); }
+        }
+        .unique-upload {
+            background: radial-gradient(circle, rgba(0,255,65,0.05) 0%, transparent 70%);
+            animation: pulse-border 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <header class="text-center mb-12">
+        <h1 class="text-5xl font-bold tracking-tighter mb-2">SHADOW<span class="text-white">TRACE</span></h1>
+        <p class="text-gray-400">Advanced Threat Intelligence & IP Mapping Hub</p>
+    </header>
+
+    <main class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+        
+        <div class="glass p-8 rounded-2xl glow transition-all">
+            <h2 class="text-2xl font-semibold mb-4 text-white">Analyze Suspicious File</h2>
+            <p class="text-sm text-gray-400 mb-6">Upload .exe or .zip to trace background network calls.</p>
+            
+            <div class="unique-upload border-2 border-dashed border-green-900 rounded-xl p-10 text-center cursor-pointer hover:border-green-400 transition-all group relative overflow-hidden">
+                <div class="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="block text-5xl mb-4 filter drop-shadow-[0_0_8px_rgba(0,255,65,0.5)]">📡</span>
+                <p class="text-green-400 font-bold group-hover:text-white transition-colors">INITIATE UPLOAD SEQUENCE</p>
+                <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">Secure Dropzone v2.4</p>
+            </div>
+            
+            <button class="w-full mt-6 bg-green-600 text-black font-bold py-3 rounded-lg hover:bg-green-400 transition-all shadow-[0_0_15px_rgba(0,255,65,0.4)]">START ANALYSIS</button>
+        </div>
+
+        <div class="glass p-8 rounded-2xl glow transition-all">
+            <h2 class="text-2xl font-semibold mb-4 text-white">IP Intelligence Scan</h2>
+            <p class="text-sm text-gray-400 mb-6">Trace geolocation and reputation of a remote IP.</p>
+            <input type="text" placeholder="Enter IP Address (e.g. 192.168.1.1)" class="w-full bg-black border border-green-900 p-4 rounded-lg mb-4 focus:outline-none focus:border-green-400">
+            <div class="h-32 bg-black/50 rounded-lg p-4 text-xs overflow-auto border border-green-900/30">
+                <p>> Waiting for input...</p>
+                <p class="text-gray-600">// Logs will appear here</p>
+            </div>
+            <button class="w-full mt-6 border border-green-600 text-green-600 font-bold py-3 rounded-lg hover:bg-green-600 hover:text-black transition-all">TRACE IP</button>
+        </div>
+
+    </main>
+
+    <footer class="mt-16 text-xs text-gray-500 flex gap-4">
+        <span>● SYSTEM: ONLINE</span>
+        <span>● DATABASE: SYNCED</span>
+        <span>● PROTECTION: ACTIVE</span>
+    </footer>
+
+</body>
+</html>
